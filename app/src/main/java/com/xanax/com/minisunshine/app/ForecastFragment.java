@@ -28,6 +28,8 @@ import java.util.List;
  */
 public class ForecastFragment extends Fragment {
 
+    private ArrayAdapter<String> mForecastAdapter;
+
     public ForecastFragment() {
     }
 
@@ -37,13 +39,13 @@ public class ForecastFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.forecastfragment, menu);
     }
 
-
-    public boolean onOptionsItemsSelected(MenuItem item){
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         if (id == R.id.action_refresh){
             FetchWeatherTask weatherTasks = new FetchWeatherTask();
@@ -56,7 +58,7 @@ public class ForecastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container,false);
+
 
 
         String[] forecastArray = {
@@ -74,9 +76,8 @@ public class ForecastFragment extends Fragment {
         );
 
 
-        ArrayAdapter<String> mForecastAdapter;
-        mForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast_textview, R.id.list_item_forecast_textview, weekForecast);
-
+        mForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, weekForecast);
+        View rootView = inflater.inflate(R.layout.fragment_main, container,false);
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
 
