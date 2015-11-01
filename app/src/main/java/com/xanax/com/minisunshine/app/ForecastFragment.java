@@ -1,5 +1,7 @@
 package com.xanax.com.minisunshine.app;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -12,8 +14,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +46,8 @@ public class ForecastFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        FetchWeatherTask weatherTasks = new FetchWeatherTask();
+        weatherTasks.execute("69008");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
@@ -89,6 +95,21 @@ public class ForecastFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container,false);
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String text = (String)parent.getItemAtPosition(position);
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(getContext(), text, duration);
+                toast.show();
+
+                Intent DetailWeather = new Intent(getActivity(), DetailActivity.class).putExtra(Intent.EXTRA_TEXT,text);
+                startActivity(DetailWeather);
+            }
+        });
 
 
         return rootView;
@@ -309,8 +330,6 @@ public class ForecastFragment extends Fragment {
             mForecastAdapter.clear();
             for (String dayForecastStr : strings) {
                 mForecastAdapter.add(dayForecastStr);
-                /*mForecastAdapter.notifyDataSetChanged();
-                super.onPostExecute(strings);*/
             }
         }
     }
